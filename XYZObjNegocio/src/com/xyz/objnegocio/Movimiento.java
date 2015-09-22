@@ -1,6 +1,6 @@
 //<editor-fold defaultstate="collapsed" desc=" License ">
 /*
- * @(#)Movimiento.java Created on 20/09/2015, 11:26:41 AM
+ * @(#)Movimiento.java Created on 22/09/2015, 10:35:55 AM
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -18,8 +18,7 @@
  * Copyright (C) 2015 Alan García. All rights reserved.
  */
 //</editor-fold>
-
-package com.xyz.business;
+package com.xyz.objnegocio;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -45,7 +44,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @version 1.0
  */
 @Entity
-@Table(name = "movimientos")
+@Table(name = "movimiento")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Movimiento.findAll", query = "SELECT m FROM Movimiento m"),
@@ -55,6 +54,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Movimiento.findByPuestoNuevo", query = "SELECT m FROM Movimiento m WHERE m.puestoNuevo = :puestoNuevo"),
     @NamedQuery(name = "Movimiento.findByFechaMov", query = "SELECT m FROM Movimiento m WHERE m.fechaMov = :fechaMov")})
 public class Movimiento implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -79,6 +79,15 @@ public class Movimiento implements Serializable {
 
     public Movimiento(Integer idMovimiento) {
         this.idMovimiento = idMovimiento;
+    }
+
+    public Movimiento(Integer idMovimiento, String tipoMov, String puestoAnterior, String puestoNuevo, Date fechaMov, Empleado idEmpleado) {
+        this.idMovimiento = idMovimiento;
+        this.tipoMov = tipoMov;
+        this.puestoAnterior = puestoAnterior;
+        this.puestoNuevo = puestoNuevo;
+        this.fechaMov = fechaMov;
+        this.idEmpleado = idEmpleado;
     }
 
     public Integer getIdMovimiento() {
@@ -151,7 +160,6 @@ public class Movimiento implements Serializable {
 
     @Override
     public String toString() {
-        return "com.xyz.business.Movimiento[ idMovimiento=" + idMovimiento + " ]";
+        return "com.xyz.objnegocio.Movimiento[ idMovimiento=" + idMovimiento + " ]";
     }
-
 }

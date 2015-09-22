@@ -1,6 +1,6 @@
 //<editor-fold defaultstate="collapsed" desc=" License ">
 /*
- * @(#)EmpleadoJpaController.java Created on 20/09/2015, 11:39:42 AM
+ * @(#)EmpleadoJpaController.java Created on 22/09/2015, 10:36:14 AM
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -19,22 +19,22 @@
  */
 //</editor-fold>
 
-package com.xzy.persistence;
+package com.xyz.persistence;
 
-import com.xyz.business.Empleado;
+import com.xyz.objnegocio.Empleado;
 import java.io.Serializable;
 import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
-import com.xyz.business.Movimiento;
-import com.xyz.persistence.exceptions.IllegalOrphanException;
-import com.xyz.persistence.exceptions.NonexistentEntityException;
+import com.xyz.objnegocio.Movimiento;
+import com.xyz.exceptions.IllegalOrphanException;
+import com.xyz.exceptions.NonexistentEntityException;
+import com.xyz.exceptions.PreexistingEntityException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 
 /**
  * Class EmpleadoJpaController
@@ -44,16 +44,17 @@ import javax.persistence.EntityManagerFactory;
  */
 public class EmpleadoJpaController implements Serializable {
 
-    public EmpleadoJpaController(EntityManagerFactory emf) {
-        this.emf = emf;
-    }
     private EntityManagerFactory emf = null;
+    
+    public EmpleadoJpaController() {
+        emf = Persistence.createEntityManagerFactory("XYZPU");
+    }
 
     public EntityManager getEntityManager() {
         return emf.createEntityManager();
     }
 
-    public void create(Empleado empleado) {
+    public void create(Empleado empleado) throws PreexistingEntityException, Exception {
         if (empleado.getMovimientoCollection() == null) {
             empleado.setMovimientoCollection(new ArrayList<Movimiento>());
         }
@@ -78,6 +79,11 @@ public class EmpleadoJpaController implements Serializable {
                 }
             }
             em.getTransaction().commit();
+        } catch (Exception ex) {
+            if (findEmpleado(empleado.getIdEmpleado()) != null) {
+                throw new PreexistingEntityException("Empleado " + empleado + " already exists.", ex);
+            }
+            throw ex;
         } finally {
             if (em != null) {
                 em.close();
@@ -184,9 +190,7 @@ public class EmpleadoJpaController implements Serializable {
     private List<Empleado> findEmpleadoEntities(boolean all, int maxResults, int firstResult) {
         EntityManager em = getEntityManager();
         try {
-            CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-            cq.select(cq.from(Empleado.class));
-            Query q = em.createQuery(cq);
+            Query q = em.createQuery("select object(o) from Empleado as o");
             if (!all) {
                 q.setMaxResults(maxResults);
                 q.setFirstResult(firstResult);
@@ -209,10 +213,7 @@ public class EmpleadoJpaController implements Serializable {
     public int getEmpleadoCount() {
         EntityManager em = getEntityManager();
         try {
-            CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-            Root<Empleado> rt = cq.from(Empleado.class);
-            cq.select(em.getCriteriaBuilder().count(rt));
-            Query q = em.createQuery(cq);
+            Query q = em.createQuery("select count(o) from Empleado as o");
             return ((Long) q.getSingleResult()).intValue();
         } finally {
             em.close();

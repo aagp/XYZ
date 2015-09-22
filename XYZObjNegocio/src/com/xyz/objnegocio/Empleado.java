@@ -1,6 +1,6 @@
 //<editor-fold defaultstate="collapsed" desc=" License ">
 /*
- * @(#)Empleado.java Created on 20/09/2015, 11:26:40 AM
+ * @(#)Empleado.java Created on 22/09/2015, 10:35:55 AM
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -18,8 +18,7 @@
  * Copyright (C) 2015 Alan García. All rights reserved.
  */
 //</editor-fold>
-
-package com.xyz.business;
+package com.xyz.objnegocio;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -28,8 +27,6 @@ import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -47,7 +44,7 @@ import javax.xml.bind.annotation.XmlTransient;
  * @version 1.0
  */
 @Entity
-@Table(name = "empleados")
+@Table(name = "empleado")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Empleado.findAll", query = "SELECT e FROM Empleado e"),
@@ -59,9 +56,9 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Empleado.findByPuesto", query = "SELECT e FROM Empleado e WHERE e.puesto = :puesto"),
     @NamedQuery(name = "Empleado.findByActivo", query = "SELECT e FROM Empleado e WHERE e.activo = :activo")})
 public class Empleado implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "idEmpleado")
     private Integer idEmpleado;
@@ -86,6 +83,15 @@ public class Empleado implements Serializable {
 
     public Empleado(Integer idEmpleado) {
         this.idEmpleado = idEmpleado;
+    }
+
+    public Empleado(int idEmpleado, String nombre, String apellidos, Date fechaIngreso, String curp, Boolean activo) {
+        this.idEmpleado = idEmpleado;
+        this.nombre = nombre;
+        this.apellidos = apellidos;
+        this.fechaIngreso = fechaIngreso;
+        this.curp = curp;
+        this.activo = activo;
     }
 
     public Integer getIdEmpleado() {
@@ -175,7 +181,8 @@ public class Empleado implements Serializable {
 
     @Override
     public String toString() {
-        return "com.xyz.business.Empleado[ idEmpleado=" + idEmpleado + " ]";
+        return "id: " + idEmpleado + " nombre: " + nombre + " apellidos: " 
+                + apellidos + " fecha ingreso: " + fechaIngreso + 
+                " curp: " + curp + " puesto: " + puesto + " activo: " + activo;
     }
-
 }

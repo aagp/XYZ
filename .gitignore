@@ -26,7 +26,8 @@ $RECYCLE.BIN/
 .LSOverride
 
 # Icon must end with two \r
-Icon
+Icon
+
 
 # Thumbnails
 ._*
@@ -41,3 +42,22 @@ Icon
 Network Trash Folder
 Temporary Items
 .apdisk
+/XYZExceptions/nbproject/private/
+/XYZIPersistence/nbproject/private/
+/XYZIInfraestructure/nbproject/private/
+/XYZInfraestructure/nbproject/private/
+/XYZObjNegocio/build/
+/XYZInfraestructure/build/
+/XYZPersistence/build/
+/XYZIPersistence/build/
+/XYZExceptions/build/
+/XYZINegocio/nbproject/private/
+/XYZNegocio/nbproject/private/
+/XYZINegocio/build/
+/XYZNegocio/build/
+/XYZExceptions/dist/
+/XYZObjNegocio/dist/
+/XYZIInfraestructure/dist/
+/XYZIPersistence/dist/
+/XYZInfraestructure/dist/
+/XYZPersistence/dist/
